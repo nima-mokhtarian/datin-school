@@ -27,8 +27,7 @@ public class PaySalary implements Runnable {
                 transactions.add(new Transaction(source.getDebtorAccount().getAccountNumber(), payment.getAccountNumber(), payment.getAmount()));
             }
         }
-        SalaryPayment.updateTransactionFile(source.getTransactions());
-        SalaryPayment.updateInventoryFile(source.getAccounts());
+        SalaryPayment.updateTransactionFile(transactions);
         logger.info("ending");
     }
 

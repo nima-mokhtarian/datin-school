@@ -45,7 +45,7 @@ public class SharedSource {
     }
 
     public List<Payment> getPayments(int index) {
-        return payments.subList(index * 2, Math.min((index + 1) * 2, payments.size() - 1));
+        return payments.subList(index * 100, Math.min((index + 1) * 100, payments.size() - 1));
     }
 
     public List<Account> getAccounts() {

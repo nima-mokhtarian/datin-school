@@ -29,8 +29,13 @@ public class SalaryPayment {
     public static void updateTransactionFile(List<Transaction> transactions) {
         if (transactions == null) return;
         StringBuilder sb = new StringBuilder();
-        for (Transaction t : transactions)
-            sb.append(t.getDebtorDepositNumber()).append('\t').append(t.getCreditorDepositNumber()).append('\t').append(t.getNumber()).append('\n');
+        for (Transaction transaction : transactions)
+            sb.append(transaction.getDebtorDepositNumber()).
+                    append('\t').
+                    append(transaction.getCreditorDepositNumber()).
+                    append('\t').
+                    append(transaction.getNumber()).
+                    append('\n');
         Path filePathObj = Paths.get("transaction.out");
         boolean fileExists = Files.exists(filePathObj);
         if (fileExists) {
@@ -51,7 +56,7 @@ public class SalaryPayment {
             sb.append(account.getAccountNumber()).append('\t').append(account.getInventory()).append('\n');
         Path filePathObj = Paths.get("account.in");
         boolean fileExists = Files.exists(filePathObj);
-        writeFile("transaction.out", sb.toString());
+        writeFile("account.in", sb.toString());
     }
 
     public static List<Transaction> doTransactions(List<Payment> p, List<Account> ac) throws PaymentException {
@@ -95,6 +100,7 @@ public class SalaryPayment {
                 logger.error(e.getMessage());
             }
         }
+        SalaryPayment.updateInventoryFile(source.getAccounts());
         logger.info(source.getDebtorAccount());
     }
 
@@ -210,6 +216,7 @@ public class SalaryPayment {
             while (buf.hasRemaining()) {
                 inChannel.write(buf);
             }
+            inChannel.close();
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

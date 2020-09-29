@@ -5,9 +5,8 @@ public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
-        logger.fatal("nimaaaaaaaaaaa");
-        //        SalaryPayment.createPaymentFile();
-        //        SalaryPayment.createInventoryFile();
+        SalaryPayment.createPaymentFile();
+        SalaryPayment.createInventoryFile();
         SalaryPayment.enhancedDoTransaction();
     }
 }

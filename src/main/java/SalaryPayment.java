@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 
 public class SalaryPayment {
-    private static Logger logger = LogManager.getLogger(SalaryPayment.class.getName());
+    private static final Logger logger = LogManager.getLogger(SalaryPayment.class.getName());
 
     public static void updateTransactionFile(List<Transaction> transactions) {
         if (transactions == null) return;
@@ -81,13 +81,11 @@ public class SalaryPayment {
 
         ExecutorService executor = Executors.newFixedThreadPool(5);
         List<Payment> payments = SalaryPayment.readPaymentFile();
-        int numberOfNeededThreads = (int) Math.ceil(payments.size() / 2.00);
+        int numberOfNeededThreads = (int) Math.ceil(payments.size() / 100.00);
         for (int i = 0; i < numberOfNeededThreads; i++) {
             try {
                 executor.submit(new PaySalary(source, i)).get();
-            } catch (InterruptedException e) {
-                logger.error(e.getMessage());
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 logger.error(e.getMessage());
             }
         }
@@ -107,7 +105,7 @@ public class SalaryPayment {
         int debtorAmount = randBetween(25000000, 26000000);
         StringBuilder s = new StringBuilder("debtor" + '\t' + an + '\t' + debtorAmount + '\n');
 
-        int num = 10;
+        int num = 2500;
         for (int i = 1; i <= num; i++) {
             String accountNumber = createRandomAccountNumber();
             int amount = randBetween(1, 10);

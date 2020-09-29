@@ -2,9 +2,11 @@ import Exceptions.PaymentException;
 import Exceptions.PaymentExceptionMessages;
 import model.Account;
 import model.Payment;
+import model.Transaction;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SharedSource {
@@ -12,11 +14,13 @@ public class SharedSource {
     private final List<Account> accounts;
     private final Payment debtorPayment;
     private Account debtorAccount;
+    private List<Transaction> transactions;
     private static final Logger logger = LogManager.getLogger(SharedSource.class.getName());
 
     public SharedSource(List<Payment> payments, List<Account> accounts) {
         this.payments = payments;
         this.accounts = accounts;
+        this.transactions = new ArrayList<>();
         this.debtorPayment = payments.stream().filter(e -> e.getType().equals("debtor")).findFirst().orElse(null);
         if (debtorPayment == null) {
             try {
@@ -52,4 +56,11 @@ public class SharedSource {
         return debtorAccount;
     }
 
+    public void addTransaction(Transaction transaction){
+        this.transactions.add(transaction);
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
 }

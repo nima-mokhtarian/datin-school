@@ -36,14 +36,22 @@ public class SalaryPayment {
         if (fileExists) {
             try {
                 Files.write(filePathObj, sb.toString().getBytes(), StandardOpenOption.APPEND);
-                logger.info("! Data Successfully Appended !");
             } catch (IOException ioExceptionObj) {
-                logger.info("Problem occurred while writing To The File= " + ioExceptionObj.getMessage());
+                logger.error("Problem occurred while writing To The File= " + ioExceptionObj.getMessage());
             }
         } else {
             writeFile("transaction.out", sb.toString());
-            logger.info("File Not Present! Please Check!");
         }
+    }
+
+    public static void updateInventoryFile(List<Account> accounts) {
+        if (accounts == null) return;
+        StringBuilder sb = new StringBuilder();
+        for (Account account : accounts)
+            sb.append(account.getAccountNumber()).append('\t').append(account.getInventory()).append('\n');
+        Path filePathObj = Paths.get("account.in");
+        boolean fileExists = Files.exists(filePathObj);
+        writeFile("transaction.out", sb.toString());
     }
 
     public static List<Transaction> doTransactions(List<Payment> p, List<Account> ac) throws PaymentException {
@@ -76,9 +84,7 @@ public class SalaryPayment {
     public static void enhancedDoTransaction() {
         List<Payment> allPaymentFileContext = readPaymentFile();
         List<Account> allAccountFileContext = readInventoryFile();
-        //shared sources between threads
         SharedSource source = new SharedSource(allPaymentFileContext, allAccountFileContext);
-
         ExecutorService executor = Executors.newFixedThreadPool(5);
         List<Payment> payments = SalaryPayment.readPaymentFile();
         int numberOfNeededThreads = (int) Math.ceil(payments.size() / 100.00);
@@ -116,13 +122,11 @@ public class SalaryPayment {
                 if (fileExists) {
                     try {
                         Files.write(filePathObj, s.toString().getBytes(), StandardOpenOption.APPEND);
-                        logger.info("Data Successfully Appended !");
                     } catch (IOException ioExceptionObj) {
                         logger.info("Problem occurred while writing To The File= " + ioExceptionObj.getMessage());
                     }
                 } else {
                     writeFile("payment.in", s.toString());
-                    logger.info("File Not Present! Please Check!");
                 }
                 s = new StringBuilder();
             }
@@ -184,7 +188,7 @@ public class SalaryPayment {
                         line.append(c);
                     }
                 }
-                buffer.clear(); // do something with the data and clear/compact it.
+                buffer.clear();
             }
             inChannel.close();
             aFile.close();

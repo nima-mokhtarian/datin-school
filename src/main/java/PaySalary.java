@@ -27,6 +27,8 @@ public class PaySalary implements Runnable {
                 transactions.add(new Transaction(source.getDebtorAccount().getAccountNumber(), payment.getAccountNumber(), payment.getAmount()));
             }
         }
+        SalaryPayment.updateTransactionFile(source.getTransactions());
+        SalaryPayment.updateInventoryFile(source.getAccounts());
         logger.info("ending");
     }
 
@@ -42,6 +44,7 @@ public class PaySalary implements Runnable {
         if (account != null) {
             logger.info("status of creditor account before transaction : " + account);
             account.setInventory(account.getInventory() + payment.getAmount());
+            source.addTransaction(new Transaction(source.getDebtorAccount().getAccountNumber(), account.getAccountNumber(), payment.getAmount()));
             logger.info("status of creditor account after transaction : " + account);
             logger.info("status of debtor account after transaction : " + source.getDebtorAccount());
             return true;
